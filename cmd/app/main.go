@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/cbr4yan/backend-template/cmd/app/loader"
+)
 
 func main() {
-	fmt.Println("hello friend...")
+	app := loader.New("backend-template")
+	app.Setup()
+	app.Run()
 }
