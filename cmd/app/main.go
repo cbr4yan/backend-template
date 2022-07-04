@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	app := loader.New("backend-template")
+	app := loader.New("example")
 	app.Setup()
 	app.Run()
 }

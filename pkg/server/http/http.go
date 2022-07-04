@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/cbr4yan/backend-template/config"
 	"github.com/cbr4yan/backend-template/pkg/logger"
 	"github.com/cbr4yan/backend-template/pkg/server"
 	"golang.org/x/sync/errgroup"
@@ -15,8 +16,12 @@ type httpServer struct {
 	stop    chan struct{}
 }
 
-func New() server.Server {
-	return &httpServer{}
+func New(c config.Server, handler http.Handler) server.Server {
+	return &httpServer{
+		addr:    c.Addr,
+		handler: handler,
+		stop:    make(chan struct{}),
+	}
 }
 
 func (s httpServer) Start() error {
@@ -36,7 +41,7 @@ func (s httpServer) Start() error {
 		return nil
 	})
 	g.Go(func() error {
-		log.Info().Msgf("[http] shutting down server")
+		log.Info().Msgf("[http] starting server at %s", srv.Addr)
 		if err := srv.ListenAndServe(); err != nil {
 			if err == http.ErrServerClosed {
 				log.Info().Msg("[http] server shutdown complete")
